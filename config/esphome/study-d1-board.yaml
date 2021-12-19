@@ -1,0 +1,92 @@
+esphome:
+  name: study_d1_board
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "xxxx"
+  password: "xxxxx"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Study-D1-Board Fallback Hotspot"
+    password: "FtnvMcZYvfEN"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "xxxx"
+
+ota:
+  password: "xxxx"
+
+
+text_sensor:
+  - platform: template
+    name: "Button 3 mode"
+    id: butt_3_mode
+    
+    
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: D2
+      mode: INPUT_PULLUP
+    name: study_button_1
+    
+  - platform: gpio
+    pin:
+      number: D3
+      mode: INPUT_PULLUP
+    name: study_button_2
+    
+  - platform: gpio
+    pin:
+      number: D4
+      mode: INPUT_PULLUP
+      inverted: true
+    name: study_button_3  
+    on_multi_click:
+    - timing:
+        - ON for at most 1s
+        - OFF for at most 1s
+        - ON for at most 1s
+        - OFF for at least 0.2s
+      then:
+        - logger.log: "Double Clicked"
+        - text_sensor.template.publish:
+            id: butt_3_mode
+            state: 'double'
+        - delay: 500ms
+        - text_sensor.template.publish:
+            id: butt_3_mode
+            state: 'clear' 
+    - timing:
+        - ON for 1s to 2s
+        - OFF for at least 0.5s
+      then:
+        - logger.log: "Single Long Clicked"
+        - text_sensor.template.publish:
+            id: butt_3_mode
+            state: 'long'
+        - delay: 500ms
+        - text_sensor.template.publish:
+            id: butt_3_mode
+            state: 'clear' 
+    - timing:
+        - ON for at most 1s
+        - OFF for at least 0.5s
+      then:
+        - logger.log: "Single short click"
+        - text_sensor.template.publish:
+            id: butt_3_mode
+            state: 'single'
+        - delay: 500ms
+        - text_sensor.template.publish:
+            id: butt_3_mode
+            state: 'clear'  
+
