@@ -1,0 +1,72 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+homeassistant:
+  name: Home
+  latitude: 37.373680
+  longitude: -122.036568
+  elevation: 115
+  unit_system: metric
+  currency: USD
+  time_zone: "America/Los_Angeles"
+
+# Text to speech
+tts:
+  - platform: google_translate
+  
+remote:
+ - platform: harmony
+   name: HarmonyHub
+   host: 192.168.1.134
+   
+   
+mqtt:
+  broker: "192.168.1.141"
+  port: 1883
+  username: "ruhul"
+  password: "ruhul"
+   
+rest_command:
+    ring_ruhul_phone:
+        url: 'https://maker.ifttt.com/trigger/call/with/key/xxxxx'
+    ring_shakira_phone:
+        url: 'https://maker.ifttt.com/trigger/call/with/key/xxxx'
+    bed_lamp:
+        url: 'https://maker.ifttt.com/trigger/sengled/with/key/xxxx'
+        
+        
+camera:
+  - platform: generic
+    name: Indoor Camera
+    still_image_url: local/wyze-logo.jpg
+    stream_source: rtsp://ruhul:ruhul@192.168.1.100/live
+
+camera 1:
+  - platform: generic
+    name: Garage camera
+    still_image_url: local/wyze-logo.jpg
+    stream_source: rtsp://ruhul:ruhul@192.168.1.126/live
+
+camera 3:
+  - platform: generic
+    name: Porch camera
+    still_image_url: local/wyze-logo.jpg
+    stream_source: rtsp://ruhul:ruhul@192.168.1.137/live
+
+
+sensor:
+  - platform: mqtt
+    name: "bed_brightness"
+    state_topic: "zigbee2mqtt/0xccccccfffeaa6a26"
+    value_template: "{{ value_json.action_level }}"
+    expire_after: 50000
+    
+sonoff:
+    username: xxxx
+    password: xxxx
+    reload: always # update device list every time HA starts
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
