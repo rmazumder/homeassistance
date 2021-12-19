@@ -1,0 +1,90 @@
+esphome:
+  name: esp32
+  platform: ESP32
+  board: nodemcu-32s
+
+wifi:
+  ssid: "xxxx"
+  password: "xxxxx"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp32_fallback"
+    password: "xxxx"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "xxxx"
+
+ota:
+  password: "xxxx"
+  
+esp32_ble_tracker:
+
+sensor:
+  - platform: uptime
+    name: "esp32_Uptime Sensor"
+    
+  - platform: wifi_signal
+    name: "esp32 WiFi Signal"
+    update_interval: 60s
+    
+  - platform: xiaomi_lywsd03mmc
+    mac_address: A4:C1:38:59:C6:EA
+    bindkey: "a40c5579623126a4b6cf97a048eb1f6f"
+    temperature:
+      name: "Dev1Temperature"
+    humidity:
+      name: "Dev1Humidity"
+    battery_level:
+      name: "Dev1Battery Level"
+    
+  - platform: xiaomi_lywsd03mmc
+    mac_address: A4:C1:38:B9:5C:54
+    bindkey: "11893745a5d64f0fc066225a60dc5476"
+    temperature:
+      name: "Dev2Temperature"
+    humidity:
+      name: "Dev2Humidity"
+    battery_level:
+      name: "Dev2Battery Level"
+      
+  - platform: xiaomi_lywsd03mmc
+    mac_address: A4:C1:38:10:A4:86
+    bindkey: "521df4633ac1e3a953536eb1bbf2823e"
+    temperature:
+      name: "Dev3Temperature"
+    humidity:
+      name: "Dev3Humidity"
+    battery_level:
+      name: "Dev3Battery Level"
+
+  - platform: xiaomi_lywsd03mmc
+    mac_address: A4:C1:38:CF:83:AA
+    bindkey: "3ddfa7464827e8bb16b231d021c0a483"
+    temperature:
+      name: "Dev4Temperature"
+    humidity:
+      name: "Dev4Humidity"
+    battery_level:
+      name: "Dev4Battery Level"
+
+time:
+  - platform: homeassistant
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 4
+        days_of_week: MON-SUN
+        then:
+           - switch.toggle: restart_switch
+switch:
+  - platform: restart
+    name: "test_temperature Restart"
+    id: restart_switch
+      
