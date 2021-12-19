@@ -1,0 +1,56 @@
+esphome:
+  name: ir_study
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "xxxx"
+  password: "xxxxx"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Ir Fallback Hotspot"
+    password: "qvfjoroT07sz"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "xxxx"
+
+ota:
+  password: "xxxx"
+
+remote_receiver:
+  pin:
+    number: D5
+    inverted: True
+    mode: INPUT_PULLUP
+  dump: all
+
+remote_transmitter:
+  pin: D6
+  carrier_duty_percent: 50%
+  
+switch:
+  - platform: template
+    name: "on_off"
+    turn_on_action:
+      remote_transmitter.transmit_nec:
+        address: 0x02FD
+        command: 0x48B7
+  
+  - platform: template
+    name: "input"
+    turn_on_action:
+      remote_transmitter.transmit_nec:
+        address: 0x02FD
+        command: 0xF00F
+
+
+web_server:
+  port: 80   
+   
