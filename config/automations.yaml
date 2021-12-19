@@ -1,0 +1,66 @@
+- id: '1621138990255'
+  alias: Sonoff RF Receive
+  trigger:
+    platform: event
+    event_type: sonoff.remote
+  action:
+    service: persistent_notification.create
+    data_template:
+      title: Sonoff RF Receive
+      message: "Name: {{ trigger.event.data.name }} \nCommand: {{ trigger.event.data.command\
+        \ }} \nTime: {{ trigger.event.data.ts }}"
+- id: '1621138990256'
+  alias: buttom1-press
+  trigger:
+    platform: event
+    event_type: sonoff.remote
+  condition: '{{ trigger.event.data.name == ''Rf-button1'' }}'
+  action:
+  - service: switch.toggle
+    target:
+      entity_id:
+      - switch.soldering_station
+- id: '1621138990257'
+  alias: buttom2-press
+  trigger:
+  - platform: event
+    event_type: sonoff.remote
+  condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.name == ''Rf-Button2'' }}'
+  action:
+  - service: scene.create
+    data:
+      scene_id: before
+      snapshot_entities:
+      - media_player.nesthub74d7
+      - media_player.living_room_display
+      - media_player.nesthub4080
+  - service: media_player.volume_set
+    data:
+        entity_id: 
+            - media_player.nesthub74d7
+            - media_player.living_room_display
+            - media_player.nesthub4080
+        volume_level: '1'
+  - service: media_player.play_media
+    target:
+        entity_id: 
+            - media_player.nesthub74d7
+            - media_player.living_room_display
+            - media_player.nesthub4080
+    data:
+        media_content_id: /local/audio/door-bell.mp3
+        media_content_type: audio/mp3
+  - service: tts.google_translate_say
+    data:
+        entity_id: 
+            - media_player.nesthub74d7
+            - media_player.living_room_display
+            - media_player.nesthub4080
+        message: 'Someone at the door'
+  - delay: 00:00:05
+  - service: scene.turn_on
+    target:
+      entity_id: scene.before 
+  
