@@ -1,0 +1,32 @@
+- alias: Call to prayer 
+  trigger:
+  - platform: time
+    at: 
+    - sensor.dhuhr_prayer
+    - sensor.asr_prayer
+    - sensor.maghrib_prayer
+    - sensor.isha_prayer
+  action:
+  - service: media_player.play_media
+  data:
+    media_content_id: /local/azan1.mp3
+    media_content_type: audio/mp3
+  target:
+    entity_id: media_player.study_display
+    entity_id: media_player.bedroom_display
+    entity_id: media_player.livingroom_display
+
+- alias: Call for fazr prayer 
+  trigger:
+  - platform: time
+    at: 
+    - sensor.fajr_prayer
+  action:
+  - service: media_player.play_media
+  data:
+    media_content_id: /local/Mishary_Rashid_Fazr.mp3
+    media_content_type: audio/mp3
+  target:
+    entity_id: media_player.study_display
+    entity_id: media_player.bedroom_display
+    entity_id: media_player.livingroom_display
